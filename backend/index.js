@@ -39,7 +39,8 @@ app.get("/",(req,res)=>{
 
 
 
-app.listen(PORT,()=>{
-    connectDB();
-    console.log(`Server running at port ${PORT}`);
-})
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
+  })
+  .catch(err => console.error("DB connection failed:", err));
