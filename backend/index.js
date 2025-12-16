@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://job-portal-beryl-rho.vercel.app/login",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
