@@ -35,15 +35,12 @@ app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 
-// FRONTEND SERVE (LAST)
-app.use(express.static(path.join(__dirname, "frontend", "dist")));
+// FRONTEND SERVE
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-app.get("*", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "frontend", "dist", "index.html")
-  );
+app.get("*", (_, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
 
-app.listen(PORT, () =>
-  console.log(`Server running at port ${PORT}`)
-);
+
+app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
