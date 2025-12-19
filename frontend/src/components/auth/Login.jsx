@@ -18,7 +18,7 @@ const Login = () => {
         password: "",
         role: "",
     });
-    const { loading,user } = useSelector(store => store.auth);
+    const { loading, user } = useSelector(store => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -31,9 +31,7 @@ const Login = () => {
         try {
             dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 withCredentials: true,
             });
             if (res.data.success) {
@@ -42,26 +40,31 @@ const Login = () => {
                 toast.success(res.data.message);
             }
         } catch (error) {
-            console.log(error);
             toast.error(error.response.data.message);
         } finally {
             dispatch(setLoading(false));
         }
     }
-    useEffect(()=>{
-        if(user){
-            navigate("/");
-        }
-    },[])
+
+    useEffect(() => {
+        if (user) navigate("/");
+    }, [])
+
     return (
         <div>
             <Navbar />
-            <div className='flex items-center justify-center max-w-7xl mx-auto'>
-                <form onSubmit={submitHandler} className='w-1/2 border border-gray-200 rounded-md p-4 my-10'>
-                    <h1 className='font-bold text-xl mb-5'>Login</h1>
-                    <div className='my-2'>
-                        <Label>Email</Label>
+
+            <div className='flex items-center justify-center max-w-7xl mx-auto px-4'>
+                <form
+                    onSubmit={submitHandler}
+                    className='w-full sm:w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] border border-gray-200 rounded-md p-4 sm:p-6 my-10'
+                >
+                    <h1 className='font-bold text-lg sm:text-xl mb-5'>Login</h1>
+
+                    <div className='my-3'>
+                        <Label className='text-sm sm:text-base'>Email</Label>
                         <Input
+                            className='h-10 sm:h-11'
                             type="email"
                             value={input.email}
                             name="email"
@@ -70,46 +73,55 @@ const Login = () => {
                         />
                     </div>
 
-                    <div className='my-2'>
-                        <Label>Password</Label>
+                    <div className='my-3'>
+                        <Label className='text-sm sm:text-base'>Password</Label>
                         <Input
+                            className='h-10 sm:h-11'
                             type="password"
                             value={input.password}
                             name="password"
                             onChange={changeEventHandler}
-                            placeholder="patel@gmail.com"
+                            placeholder="Enter your password"
                         />
                     </div>
-                    <div className='flex items-center justify-between'>
-                        <RadioGroup className="flex items-center gap-4 my-5">
-                            <div className="flex items-center space-x-2">
+
+                    <div className='flex flex-col sm:flex-row sm:items-center sm:justify-start gap-4 my-5'>
+                        <RadioGroup className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
                                 <Input
                                     type="radio"
                                     name="role"
                                     value="student"
                                     checked={input.role === 'student'}
                                     onChange={changeEventHandler}
-                                    className="cursor-pointer"
                                 />
-                                <Label htmlFor="r1">Student</Label>
+                                <Label>Student</Label>
                             </div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center gap-2">
                                 <Input
                                     type="radio"
                                     name="role"
                                     value="recruiter"
                                     checked={input.role === 'recruiter'}
                                     onChange={changeEventHandler}
-                                    className="cursor-pointer"
                                 />
-                                <Label htmlFor="r2">Recruiter</Label>
+                                <Label>Recruiter</Label>
                             </div>
                         </RadioGroup>
                     </div>
-                    {
-                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Login</Button>
-                    }
-                    <span className='text-sm'>Don't have an account? <Link to="/signup" className='text-blue-600'>Signup</Link></span>
+
+                    {loading ? (
+                        <Button className="w-full h-11 sm:h-12 my-4">
+                            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                            Please wait
+                        </Button>
+                    ) : (
+                        <Button type="submit" className="w-full h-11 sm:h-12 my-4">Login</Button>
+                    )}
+
+                    <span className='text-sm'>
+                        Don't have an account? <Link to="/signup" className='text-blue-600'>Signup</Link>
+                    </span>
                 </form>
             </div>
         </div>
