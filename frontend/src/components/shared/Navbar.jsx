@@ -13,7 +13,8 @@ const Navbar = () => {
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // mobile menu
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false); // desktop profile dropdown
 
   const logoutHandler = async () => {
     try {
@@ -25,6 +26,7 @@ const Navbar = () => {
         toast.success(res.data.message);
         navigate("/");
         setOpen(false);
+        setDesktopMenuOpen(false);
       }
     } catch (err) {
       toast.error("Logout failed");
@@ -32,17 +34,16 @@ const Navbar = () => {
   };
 
   return (
-    <header className="bg-white border-b">
+    <header className="bg-white border-b relative">
       {/* Top Bar */}
       <div className="flex justify-between items-center h-16 px-4 max-w-7xl mx-auto">
-
         {/* Logo */}
         <h1 className="text-2xl font-bold">
           Job<span className="text-[#F83002]">Portal</span>
         </h1>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-8 relative">
           <nav className="flex gap-6 font-medium">
             {user?.role === "recruiter" ? (
               <>
@@ -70,17 +71,39 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <Avatar>
-              <AvatarImage src={user?.profile?.profilePhoto} />
-            </Avatar>
+            <div className="relative">
+              <button onClick={() => setDesktopMenuOpen(!desktopMenuOpen)}>
+                <Avatar>
+                  <AvatarImage src={user?.profile?.profilePhoto} />
+                </Avatar>
+              </button>
+
+              {/* Desktop dropdown */}
+              {desktopMenuOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50 flex flex-col">
+                  {user?.role === "student" && (
+                    <Link
+                      to="/profile"
+                      onClick={() => setDesktopMenuOpen(false)}
+                      className="px-4 py-2 hover:bg-gray-100 flex items-center gap-2"
+                    >
+                      <User2 size={16} /> Profile
+                    </Link>
+                  )}
+                  <button
+                    onClick={logoutHandler}
+                    className="px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-red-500"
+                  >
+                    <LogOut size={16} /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
         {/* Hamburger Button (MOBILE ONLY) */}
-        <button
-          className="md:hidden z-50"
-          onClick={() => setOpen(!open)}
-        >
+        <button className="md:hidden z-50" onClick={() => setOpen(!open)}>
           {open ? <X size={30} /> : <Menu size={30} />}
         </button>
       </div>
@@ -89,7 +112,6 @@ const Navbar = () => {
       {open && (
         <div className="md:hidden bg-white border-t shadow-lg">
           <div className="flex flex-col gap-4 p-5 font-medium">
-
             {user?.role === "recruiter" ? (
               <>
                 <Link onClick={() => setOpen(false)} to="/admin/companies">
@@ -101,9 +123,15 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link onClick={() => setOpen(false)} to="/">Home</Link>
-                <Link onClick={() => setOpen(false)} to="/jobs">Jobs</Link>
-                <Link onClick={() => setOpen(false)} to="/browse">Browse</Link>
+                <Link onClick={() => setOpen(false)} to="/">
+                  Home
+                </Link>
+                <Link onClick={() => setOpen(false)} to="/jobs">
+                  Jobs
+                </Link>
+                <Link onClick={() => setOpen(false)} to="/browse">
+                  Browse
+                </Link>
               </>
             )}
 
